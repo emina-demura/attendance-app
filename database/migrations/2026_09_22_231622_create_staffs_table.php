@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email', 255)->unique()->required();
             $table->string('password', 255)->required();
             // admin,staffの権限の区別分け（デフォルトをstaffに設定）
-            $table->string('roll')->default('staff');
+            $table->string('role')->default('staff');
             $table->timestamps();
         });
     }
