@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Attendance;
 
 class AttendanceController extends Controller
 {
@@ -14,8 +14,8 @@ class AttendanceController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();   // 認証済みユーザーの取得
-        
-         // 最新の勤怠レコードを取得
+
+        // 最新の勤怠レコードを取得
         $latestAttendance = Attendance::where('staff_id', $user->id)
             ->latest('event_at')
             ->first();
@@ -27,13 +27,13 @@ class AttendanceController extends Controller
             $user->attendance_status = '勤務外'; // データがない場合は勤務外
         }
 
-        //$statusname = $request->input('statusname');
+        // $statusname = $request->input('statusname');
         $formattedDate = now()->format('Y年n月j日(D)');
         $formattedTime = $request->input('time');
 
         return view('user.attendance-register', [
             'user' => $user,
-            //'statusname' => $statusname,
+            // 'statusname' => $statusname,
             'formattedDate' => $formattedDate,
             'formattedTime' => $formattedTime,
         ]);

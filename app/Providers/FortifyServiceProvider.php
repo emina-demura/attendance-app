@@ -6,7 +6,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Actions\Fortify\LoginResponse;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -24,6 +24,7 @@ class FortifyServiceProvider extends ServiceProvider
     {
         //
     }
+
     /**
      * Bootstrap any application services.
      */
@@ -50,27 +51,27 @@ class FortifyServiceProvider extends ServiceProvider
             if ($request->routeIs('admin.admin-login')) {
                 return view('admin.admin-login'); // 管理者ログイン画面
             }
+
             return view('user.user-login'); // デフォルトはスタッフ
-            });
+        });
 
         Fortify::registerView(function (Request $request) {
             return view('user.register');
         });
 
-        //LoginResposeで管理者ログイン画面の遷移　
+        // LoginResposeで管理者ログイン画面の遷移　
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LoginResponse::class,
             \App\Actions\LoginResponse::class
         );
 
-
-        //ログインできるかどうか判定する(ログインする直前で確認)
+        // ログインできるかどうか判定する(ログインする直前で確認)
         Fortify::authenticateUsing(function (Request $request) {
 
             // メールアドレスでユーザーを取得
-            $user = \App\Models\User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
             // ユーザーが存在しない場合は null を返す
-            if (!$user) {
+            if (! $user) {
                 return null;
             }
 
@@ -87,6 +88,6 @@ class FortifyServiceProvider extends ServiceProvider
             // ここまで来たら role が一致しているのでOK
             return $user;
         });
-        
-    }  
+
+    }
 }

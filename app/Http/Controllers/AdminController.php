@@ -12,6 +12,7 @@ class AdminController extends Controller
     public function index()
     {
         $user = Auth::user();   // 認証済みユーザーの取得
+
         return view('admin.admin-attendance-list');
     }
 

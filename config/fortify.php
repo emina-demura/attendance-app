@@ -1,7 +1,7 @@
 <?php
 
-use Laravel\Fortify\Features;
 use App\Providers\RouteServiceProvider;
+use Laravel\Fortify\Features;
 
 return [
 
@@ -156,8 +156,8 @@ return [
             // 'window' => 0,
         ]),
     ],
-     'redirects' => [
-        'logout' => config('app.url') . '/login'
+    'redirects' => [
+        'logout' => config('app.url').'/login',
     ],
 
 ];
