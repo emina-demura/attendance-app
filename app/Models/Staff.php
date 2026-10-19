@@ -25,6 +25,7 @@ class Staff extends Model
     protected $casts = [
         'password' => 'hashed',
     ];
+    
 
     public function attendances(): HasMany
     {

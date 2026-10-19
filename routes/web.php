@@ -1,6 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttendanceController;
+use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\LoginResponse;
+use App\Models\Attendance;
+use App\Http\Controllers\AdminController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +20,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+/*
+Route::get('/attendance', function () {
+    return view('user.attendance-register');
+})->middleware('auth');
+*/
+
+// スタッフ用ログイン画面
+Route::get('/login', function () {
+    return view('user.user-login');
+})->name('staff.login');
+
+// スタッフ用登録画面
+Route::get('/register', function () {
+    return view('user.register');
+})->name('staff.register');
+
+//管理者用ログイン画面
+Route::get('/admin/login', function () {
+    return view('admin.admin-login');
+})->name('admin.admin-login');
+
+//　認証済みスタッフのみ勤怠登録画面へアクセス可能
+Route::middleware('auth')->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance-register');
 });
+
+//　認証済み管理者のみ勤怠登録画面へアクセス可能
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/attendance/list', [AdminController::class, 'index'])->name('admin-attendance-list');
+});
+    
+//ユーザログアウト画面
+Route::get('/logout', function () {
+    return view('user.user-login');
+});
+
+
