@@ -29,16 +29,17 @@ class CreateNewUser implements CreatesNewUsers
                 'string',
                 'email',
                 'max:255',
-                Rule::unique(User::class),
+                Rule::unique(Staff::class),
             ],
             'password' => $this->passwordRules(),
             'password_confirmation' => ['required', 'same:password'],
         ])->validate();
 
-        return User::create([
+        return Staff::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'role' => 'staff', // デフォルトでスタッフとして登録
         ]);
     }
 

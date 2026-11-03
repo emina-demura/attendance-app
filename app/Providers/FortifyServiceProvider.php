@@ -3,10 +3,11 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\LoginResponse;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Models\User;
+use App\Models\Staff;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -62,14 +63,14 @@ class FortifyServiceProvider extends ServiceProvider
         // LoginResposeで管理者ログイン画面の遷移　
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LoginResponse::class,
-            \App\Actions\LoginResponse::class
+            LoginResponse::class
         );
 
         // ログインできるかどうか判定する(ログインする直前で確認)
         Fortify::authenticateUsing(function (Request $request) {
 
             // メールアドレスでユーザーを取得
-            $user = User::where('email', $request->email)->first();
+            $user = Staff::where('email', $request->email)->first();
             // ユーザーが存在しない場合は null を返す
             if (! $user) {
                 return null;
