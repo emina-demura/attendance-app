@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\AttendanceController;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,14 +38,17 @@ Route::get('/admin/login', function () {
     return view('admin.admin-login');
 })->name('admin.admin-login');
 
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])
+    ->name('admin.admin-login');
+
 //　認証済みスタッフのみ勤怠登録画面へアクセス可能
 Route::middleware('auth')->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance-register');
 });
 
 //　認証済み管理者のみ勤怠登録画面へアクセス可能
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/attendance/list', [AdminController::class, 'index'])->name('admin-attendance-list');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin-attendance-list');
 });
 
 // ユーザログアウト画面

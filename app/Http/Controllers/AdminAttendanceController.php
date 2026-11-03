@@ -2,18 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Staff;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class AdminController extends Controller
+class AdminAttendanceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = Auth::user();   // 認証済みユーザーの取得
+        $staff = Auth::user(); // 認証済みユーザーの取得
 
-        return view('admin.admin-attendance-list');
+        // 管理者でない場合は403エラーを返す
+        if ($staff->role !== 'admin') {
+            abort(403);
+        }
+
+        $date = Carbon::today();
+
+        return view('admin.admin-attendance-list', [
+            'date' => $date,
+            'previousDay' => $date->copy()->subDay()->format('Y-m-d'),
+            'nextDay' => $date->copy()->addDay()->format('Y-m-d'),
+            'users' => Staff::all(),
+            'attendanceRecords' => collect(),
+        ]);
     }
 
     /**
