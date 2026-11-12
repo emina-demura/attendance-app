@@ -14,7 +14,7 @@ class Status extends Model
         'event_type',
     ];
 
-    protected $table = 'statuses';
+    protected $table = 'status';
 
     public function attendances(): HasMany
     {

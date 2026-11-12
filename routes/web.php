@@ -42,12 +42,12 @@ Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])
     ->name('admin.admin-login');
 
 //　認証済みスタッフのみ勤怠登録画面へアクセス可能
-Route::middleware('auth')->group(function () {
-    Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance-register');
+Route::middleware('auth', 'role:staff')->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('user-attendance-register');
 });
 
 //　認証済み管理者のみ勤怠登録画面へアクセス可能
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin-attendance-list');
 });
 
@@ -55,3 +55,11 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/logout', function () {
     return view('user.user-login');
 });
+
+// 管理者ログアウト画面
+// Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroy']);
+// return view('user.user-login');
+
+// 勤怠登録画面の出勤ボタン押下時の処理
+Route::post('/attendance', [AttendanceController::class, 'store'])
+    ->name('attendance.store');
