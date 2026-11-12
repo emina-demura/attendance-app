@@ -11,22 +11,25 @@ class Attendance extends Model
     use HasFactory;
 
     protected $fillable = [
-        'attendance_id',
-        'type',
-        'new_time',
-        'new_note',
+        // 'attendance_id',
+        // 'type',
+        // 'new_time',
+        // 'new_note',
+        'staff_id',
+        'status_id',
+        'event_at',
     ];
 
     protected $table = 'attendances';
 
-    public function staffs()
+    public function staff()
     {
-        return $this->belongsTo(Staff::class);
+        return $this->belongsTo(Staff::class, 'staff_id');
     }
 
-    public function statuses()
+    public function status()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
     public function correction_requests(): HasMany

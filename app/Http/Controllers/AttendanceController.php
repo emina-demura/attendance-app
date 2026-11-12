@@ -31,7 +31,7 @@ class AttendanceController extends Controller
         $formattedDate = now()->format('Y年n月j日(D)');
         $formattedTime = $request->input('time');
 
-        return view('user.attendance-register', [
+        return view('user.user-attendance-register', [
             'user' => $user,
             // 'statusname' => $statusname,
             'formattedDate' => $formattedDate,
@@ -52,7 +52,13 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Attendance::create([
+            'staff_id' => Auth::id(),
+            'status_id' => 2,
+            'event_at' => now(),
+        ]);
+
+        return redirect()->route('user-attendance-register');
     }
 
     /**
